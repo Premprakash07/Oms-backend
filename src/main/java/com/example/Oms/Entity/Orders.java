@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,8 +23,10 @@ public class Orders {
     private int quantity;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = '')
     private LocalDateTime orderDate;
+
+    @Temporal(TemporalType.DATE)
+    private LocalDate deliveryDate;
 
     @ManyToOne
     private Inventory inventory;
