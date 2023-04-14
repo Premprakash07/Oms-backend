@@ -16,27 +16,27 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserAuthCred implements UserDetails {
+public class ShopAuthCred implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userCredId;
+    private int shopCredId;
+
+    @OneToOne
+    private ShopInfo shopInfo;
 
     private String password;
 
-    @OneToOne
-    private UserInfo userInfo;
-
-    private String userRole = "USER";
+    private String role = "OWNER";
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.userRole));
+        return List.of(new SimpleGrantedAuthority(this.role));
     }
 
     @Override
     public String getUsername() {
-        return this.userInfo.getUserEmail();
+        return this.shopInfo.getShopEmail();
     }
 
     @Override

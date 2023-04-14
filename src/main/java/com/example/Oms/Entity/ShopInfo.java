@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -47,4 +48,10 @@ public class ShopInfo {
     private String shopEmail;
 
     private String phoneNo;
+
+    @OneToMany(mappedBy = "shopInfo", cascade = CascadeType.ALL)
+    private List<ShopReviews> shopReviewsList;
+
+    @OneToOne(mappedBy = "shopInfo", cascade = CascadeType.ALL)
+    private ShopAuthCred shopAuthCred;
 }

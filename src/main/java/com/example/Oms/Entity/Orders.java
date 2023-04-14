@@ -1,6 +1,5 @@
 package com.example.Oms.Entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class Orders {
     private int quantity;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDate = LocalDateTime.now();
 
     @Temporal(TemporalType.DATE)
     private LocalDate deliveryDate;
