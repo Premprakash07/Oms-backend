@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -35,5 +37,14 @@ public class UserInfo {
 
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL)
     private UserAuthCred userAuthCred;
+
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.DETACH)
+    private List<ItemReviews> itemReviewsList;
+
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private List<Orders> ordersList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.DETACH)
+    private List<ShopReviews> shopReviewsList = new ArrayList<>();
 }
 

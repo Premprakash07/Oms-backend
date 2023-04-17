@@ -22,4 +22,7 @@ public class ShopReviews {
 
     @ManyToOne
     private ShopInfo shopInfo;
+
+    @ManyToOne
+    private UserInfo userInfo;
 }

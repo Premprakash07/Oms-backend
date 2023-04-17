@@ -22,4 +22,7 @@ public class ItemReviews {
 
     @ManyToOne
     private Inventory inventory;
+
+    @ManyToOne
+    private UserInfo userInfo;
 }
