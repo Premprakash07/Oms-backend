@@ -10,9 +10,8 @@ import java.util.HashMap;
 @RequestMapping("/")
 public class TestController {
 
-    @PostMapping("/test")
-    public void testApi(HttpServletResponse response, @RequestBody HashMap<String, Object> body) throws IOException {
-        System.out.println(body.toString());
+    @GetMapping("/test")
+    public void testApi(HttpServletResponse response) throws IOException {
         response.getWriter().write("hey kamal");
     }
 }
