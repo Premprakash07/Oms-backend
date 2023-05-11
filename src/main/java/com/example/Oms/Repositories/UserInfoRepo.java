@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserInfoRepo extends JpaRepository<UserInfo, Integer> {
-    boolean existsByUserEmail(String userEmail);
+    boolean existsByEmail(String email);
 
-    UserInfo findByUserEmail(String userEmail);
+    UserInfo findByEmail(String email);
 }

@@ -1,12 +1,12 @@
 package com.example.Oms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
@@ -17,19 +17,12 @@ public class Orders {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderId;
+    private int OrderId;
 
-    private int quantity;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime orderDate = LocalDateTime.now();
-
-    @Temporal(TemporalType.DATE)
-    private LocalDate deliveryDate;
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    private List<OrderItems> orderItemsList;
 
     @ManyToOne
-    private Inventory inventory;
-
-    @ManyToOne
+    @JsonIgnore
     private UserInfo userInfo;
 }

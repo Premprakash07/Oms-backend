@@ -1,5 +1,6 @@
 package com.example.Oms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +24,12 @@ public class ShopAuthCred implements UserDetails {
     private int shopCredId;
 
     @OneToOne
+    @JsonIgnore
     private ShopInfo shopInfo;
 
     private String password;
 
-    private String role = "OWNER";
+    private String role = "SHOPKEEPER";
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -36,7 +38,7 @@ public class ShopAuthCred implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.shopInfo.getShopEmail();
+        return this.shopInfo.getEmail();
     }
 
     @Override

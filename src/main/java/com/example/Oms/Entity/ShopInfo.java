@@ -21,31 +21,31 @@ public class ShopInfo {
     @Column(nullable = false)
     private String shopName;
 
-    @Column(nullable = false)
-    private String Address;
+//    @Column(nullable = false)
+    private String address;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private int areaPin;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private int deliverArea;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Temporal(TemporalType.TIME)
     private LocalTime openTime;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Temporal(TemporalType.TIME)
     private LocalTime closeTime;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String owner;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String gstIn;
 
     @Column(nullable = false, unique = true)
-    private String shopEmail;
+    private String email;
 
     private String phoneNo;
 

@@ -21,7 +21,7 @@ public class UserInfo {
     private int userInfoId;
 
     @Column(unique = true, nullable = false)
-    private String userEmail;
+    private String email;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdOn = LocalDateTime.now();
@@ -31,7 +31,7 @@ public class UserInfo {
 
     private String phoneNo;
 
-    private String userAdderss;
+    private String address;
 
     private String areaPin;
 

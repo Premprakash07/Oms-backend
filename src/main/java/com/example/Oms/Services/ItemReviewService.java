@@ -31,28 +31,28 @@ public class ItemReviewService {
     @Autowired
     private ShopInfoRepo shopInfoRepo;
 
-    public void addReview(HttpServletResponse response, int itemId, ItemReviews itemReviews) throws IOException {
+    public String addReview(HttpServletResponse response, int itemId, ItemReviews itemReviews) throws IOException {
         Authentication userAuthToken = SecurityContextHolder.getContext().getAuthentication();
 
         if (this.inventoryRepo.existsById(itemId)) {
             Inventory itemDetails = this.inventoryRepo.findById(itemId).get();
 
-            if (this.userInfoRepo.existsByUserEmail((String) userAuthToken.getPrincipal())) {
-                UserInfo userInfo = this.userInfoRepo.findByUserEmail((String) userAuthToken.getPrincipal());
+            if (this.userInfoRepo.existsByEmail((String) userAuthToken.getPrincipal())) {
+                UserInfo userInfo = this.userInfoRepo.findByEmail((String) userAuthToken.getPrincipal());
 
                 itemReviews.setUserInfo(userInfo);
                 itemReviews.setInventory(itemDetails);
 
                 this.itemReviewRepo.save(itemReviews);
 
-                response.getWriter().write("Item review saved");
+                return "Item review saved";
             } else {
                 response.setStatus(400);
-                response.getWriter().write("Invalid user id");
+                return "Invalid user id";
             }
         } else {
             response.setStatus(400);
-            response.getWriter().write("Invalid item id");
+            return "Invalid item id";
         }
     }
 

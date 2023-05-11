@@ -31,11 +31,12 @@ public class Inventory {
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Orders> ordersList = new ArrayList<>();
+    private List<OrderItems> ordersList = new ArrayList<>();
 
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL)
     private List<ItemReviews> itemReviewsList = new ArrayList<>();
 
     @ManyToOne
+    @JsonIgnore
     private ShopInfo shopInfo;
 }

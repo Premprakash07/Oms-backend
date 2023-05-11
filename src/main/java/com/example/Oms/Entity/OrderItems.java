@@ -6,20 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table
 @Getter
 @Setter
 @NoArgsConstructor
-public class ItemReviews {
+public class OrderItems {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemReviewId;
+    private int orderItemId;
 
-    private String itemReview;
+    private int quantity;
 
-    private int rating;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime orderDate = LocalDateTime.now();
+
+    @Temporal(TemporalType.DATE)
+    private LocalDate deliveryDate;
 
     @ManyToOne
     @JsonIgnore
@@ -27,5 +34,5 @@ public class ItemReviews {
 
     @ManyToOne
     @JsonIgnore
-    private UserInfo userInfo;
+    private Orders orders;
 }

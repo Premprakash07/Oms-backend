@@ -1,5 +1,6 @@
 package com.example.Oms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +22,10 @@ public class ShopReviews {
     private String shopReview;
 
     @ManyToOne
+    @JsonIgnore
     private ShopInfo shopInfo;
 
     @ManyToOne
+    @JsonIgnore
     private UserInfo userInfo;
 }

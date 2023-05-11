@@ -27,28 +27,28 @@ public class ShopReviewService {
     @Autowired
     private UserInfoRepo userInfoRepo;
 
-    public void addReview(HttpServletResponse response, int shopId, ShopReviews shopReview) throws IOException {
+    public String addReview(HttpServletResponse response, int shopId, ShopReviews shopReview) throws IOException {
         Authentication userAuthToken = SecurityContextHolder.getContext().getAuthentication();
 
         if (this.shopInfoRepo.existsById(shopId)) {
             ShopInfo shopInfo = this.shopInfoRepo.findById(shopId).get();
 
-            if (this.userInfoRepo.existsByUserEmail((String) userAuthToken.getPrincipal())) {
-                UserInfo userInfo = this.userInfoRepo.findByUserEmail((String) userAuthToken.getPrincipal());
+            if (this.userInfoRepo.existsByEmail((String) userAuthToken.getPrincipal())) {
+                UserInfo userInfo = this.userInfoRepo.findByEmail((String) userAuthToken.getPrincipal());
 
                 shopReview.setUserInfo(userInfo);
                 shopReview.setShopInfo(shopInfo);
 
                 this.shopReviewRepo.save(shopReview);
 
-                response.getWriter().write("Shop review saved");
+                return "Shop review saved";
             } else {
                 response.setStatus(400);
-                response.getWriter().write("Invalid user id");
+                return "Invalid user id";
             }
         } else {
             response.setStatus(400);
-            response.getWriter().write("Invalid shop id");
+            return "Invalid shop id";
         }
     }
 
