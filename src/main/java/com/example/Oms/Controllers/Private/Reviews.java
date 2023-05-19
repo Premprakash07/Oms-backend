@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-
+@CrossOrigin
 @RestController
-@RequestMapping("/private/review")
+@RequestMapping("/review")
 public class Reviews {
 
     @Autowired
@@ -30,20 +30,6 @@ public class Reviews {
     @PostMapping("/shop/{shopId}")
     public String addShopReview(HttpServletResponse response, @PathVariable("shopId") int shopId, @RequestBody ShopReviews shopReviews) throws IOException {
         String res = this.shopReviewService.addReview(response, shopId, shopReviews);
-
-        return res;
-    }
-
-    @GetMapping("/shop/getall/{shopId}")
-    public Object getAllShopReviews(HttpServletResponse response, @PathVariable("shopId") int shopId) {
-        Object res = this.shopReviewService.getAllReviews(response, shopId);
-
-        return res;
-    }
-
-    @GetMapping("/item/getall/{itemId}")
-    public Object getAllItemReviews(HttpServletResponse response, @PathVariable("itemId") int itemId) {
-        Object res = this.itemReviewService.getAllReviews(response, itemId);
 
         return res;
     }

@@ -1,5 +1,6 @@
 package com.example.Oms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,12 +40,15 @@ public class UserInfo {
     private UserAuthCred userAuthCred;
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.DETACH)
+    @JsonIgnore
     private List<ItemReviews> itemReviewsList;
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Orders> ordersList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.DETACH)
+    @JsonIgnore
     private List<ShopReviews> shopReviewsList = new ArrayList<>();
 }
 

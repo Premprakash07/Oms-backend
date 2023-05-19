@@ -37,6 +37,6 @@ public class Inventory {
     private List<ItemReviews> itemReviewsList = new ArrayList<>();
 
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
     private ShopInfo shopInfo;
 }

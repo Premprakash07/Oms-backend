@@ -7,6 +7,7 @@ import com.example.Oms.Repositories.ShopInfoRepo;
 import com.example.Oms.Repositories.UserInfoRepo;
 import com.example.Oms.Services.ShopService;
 import jakarta.servlet.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +39,21 @@ public class JwtFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
+        Cookie[] cookies = request.getCookies();
+        String loginCookie = new String();
+        if (cookies != null){
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("loginToken")) {
+                    loginCookie = cookie.getValue();
+                }
+            }
+        }
+        if (loginCookie != null && !loginCookie.isBlank()) {
 
-        String authHeader = request.getHeader("Cookie");
-        if (authHeader != null && authHeader.startsWith("loginToken=") && !authHeader.isBlank()) {
-            String token = authHeader.substring(15);
-            if (!token.isBlank()) {
-                try {
-                    Map<String, Claim> claims = this.jwtUtils.validateToken(token);
+            if (!loginCookie.isBlank()) {
+                    Map<String, Claim> claims = this.jwtUtils.validateToken(loginCookie);
 
-                    if (claims.get("Type").asString().equals("CUSTOMER")) {
+                    if (claims.get("Type").asString().equals("customer")) {
 
                         UserInfo userProfile = new UserInfo();
 
@@ -63,7 +70,6 @@ public class JwtFilter implements Filter {
                         SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     } else {
-
                         ShopInfo shopInfo = new ShopInfo();
 
                         String email = claims.get("Email").asString();
@@ -79,9 +85,6 @@ public class JwtFilter implements Filter {
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
 
-                } catch (Exception e) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid token");
-                }
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid token");
             }

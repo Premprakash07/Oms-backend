@@ -6,6 +6,9 @@ import com.example.Oms.Repositories.InventoryRepo;
 import com.example.Oms.Repositories.ShopInfoRepo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -52,29 +55,45 @@ public class InventoryService {
         }
     }
 
-    public String addNewItem(HttpServletResponse response, com.example.Oms.Entity.Inventory itemDetails){
-        if (this.inventoryRepo.existsByItemName(itemDetails.getItemName())) {
-            response.setStatus(400);
+    public String addNewItem(HttpServletResponse response, Inventory itemDetails){
+        Authentication shopToken = SecurityContextHolder.getContext().getAuthentication();
+        if (!(shopToken instanceof AnonymousAuthenticationToken)) {
+            ShopInfo shopInfo = this.shopInfoRepo.findByEmail((String) shopToken.getName());
+            if (this.inventoryRepo.existsByItemNameAndShopInfo(itemDetails.getItemName(), shopInfo)) {
+                response.setStatus(400);
 
-            return "Item already exists";
-        } else {
-            this.inventoryRepo.save(itemDetails);
+                return "Item already exists";
+            } else {
+                itemDetails.setShopInfo(shopInfo);
 
-            return "Item has been added";
+                this.inventoryRepo.save(itemDetails);
+
+                return "Item has been added";
+            }
         }
+
+        response.setStatus(401);
+        return "Unauthorized Access";
     }
 
-    public String removeItem(HttpServletResponse response, int itemId) {
-        if (this.inventoryRepo.existsById(itemId)) {
-            this.inventoryRepo.deleteById(itemId);
-
-            return "Item has been deleted";
-        } else {
-            response.setStatus(400);
-
-            return "Item with id does not exist";
-        }
-    }
+//    public String removeItem(HttpServletResponse response, int itemId) {
+//        Authentication shopToken = SecurityContextHolder.getContext().getAuthentication();
+//        if (!(shopToken instanceof AnonymousAuthenticationToken)) {
+//            ShopInfo shopInfo = this.shopInfoRepo.findByEmail((String) shopToken.getName());
+//            if (this.inventoryRepo.existsByIdAndShopInfo(itemId, shopInfo)) {
+//                this.inventoryRepo.deleteById(itemId);
+//
+//                return "Item has been deleted";
+//            } else {
+//                response.setStatus(400);
+//
+//                return "Item with id does not exist";
+//            }
+//        }
+//
+//        response.setStatus(401);
+//        return "Unauthorized Access";
+//    }
 
     public Object getAllItemFromShop(HttpServletResponse response, int shopId) {
         if (this.shopInfoRepo.existsById(shopId)) {

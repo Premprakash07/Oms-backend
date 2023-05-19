@@ -10,7 +10,9 @@ import java.util.List;
 @Repository
 public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
 
-    boolean existsByItemName(String itemName);
+    boolean existsByItemNameAndShopInfo(String itemName, ShopInfo shopInfo);
+//
+//    boolean existsByIdAndShopInfo(int shopId, ShopInfo shopInfo);
 
     List<Inventory> findAllByShopInfo(ShopInfo shopInfo);
 }

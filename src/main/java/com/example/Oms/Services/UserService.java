@@ -6,6 +6,7 @@ import com.example.Oms.Repositories.UserCredRepo;
 import com.example.Oms.Repositories.UserInfoRepo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -30,8 +33,13 @@ public class UserService implements UserDetailsService {
     public String createUser(HttpServletResponse response, UserInfo userInfo) {
         if (this.userInfoRepo.existsByEmail(userInfo.getEmail())) {
             response.setStatus(400);
-            return "User this this email already exists";
-        } else {
+            return "1";
+        }
+        if (this.userInfoRepo.existsByPhoneNo(userInfo.getPhoneNo())) {
+            response.setStatus(400);
+            return "2";
+        }
+        else {
 
             UserAuthCred userAuthCred = userInfo.getUserAuthCred();
             userAuthCred.setUserInfo(userInfo);
@@ -41,19 +49,32 @@ public class UserService implements UserDetailsService {
 
             return "User has been saved";
         }
-     }
+    }
+
+    public String updateUser(HttpServletResponse response, HashMap<String, Object> udpateDetails) {
+        return "updated";
+    }
+
+    public Object getUserDetails (HttpServletResponse response) {
+        return "userDetails";
+    }
+
     public String deleteUser(HttpServletResponse response) {
         Authentication userToken = SecurityContextHolder.getContext().getAuthentication();
-        UserInfo user = this.userInfoRepo.findByEmail((String) userToken.getName());
-        if (this.userInfoRepo.existsById(user.getUserInfoId())) {
-            this.userInfoRepo.delete(user);
+        if (!(userToken instanceof AnonymousAuthenticationToken)){
+            UserInfo user = this.userInfoRepo.findByEmail((String) userToken.getName());
+            if (this.userInfoRepo.existsById(user.getUserInfoId())) {
+                this.userInfoRepo.delete(user);
 
-            return "User has been deleted";
-        } else {
-            response.setStatus(400);
+                return "User has been deleted";
+            } else {
+                response.setStatus(400);
 
-            return "User with this id does not exist";
+                return "User with this id does not exist";
+            }
         }
+        response.setStatus(401);
+        return "Unauthorized Access";
      }
 
     @Override

@@ -8,5 +8,9 @@ import org.springframework.stereotype.Repository;
 public interface ShopInfoRepo extends JpaRepository<ShopInfo, Integer> {
     boolean existsByEmail(String email);
 
+    boolean existsByPhoneNo(String phoneNo);
+
+    boolean existsByGstin(String gstIn);
+
     ShopInfo findByEmail(String email);
 }

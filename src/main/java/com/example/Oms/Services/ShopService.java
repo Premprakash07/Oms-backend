@@ -1,16 +1,12 @@
 package com.example.Oms.Services;
 
-import com.example.Oms.Configuration.AppConfig;
-import com.example.Oms.Configuration.JwtUtils;
 import com.example.Oms.Entity.ShopAuthCred;
 import com.example.Oms.Entity.ShopInfo;
 import com.example.Oms.Repositories.ShopCredRepo;
 import com.example.Oms.Repositories.ShopInfoRepo;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,8 +34,17 @@ public class ShopService implements UserDetailsService {
     public String createShop(HttpServletResponse response, ShopInfo shopInfo) {
         if (this.shopInfoRepo.existsByEmail(shopInfo.getEmail())) {
             response.setStatus(400);
-            return "Shop with this email already present";
-        } else {
+            return "1";
+        }
+        if (this.shopInfoRepo.existsByPhoneNo(shopInfo.getPhoneNo())) {
+            response.setStatus(400);
+            return "2";
+        }
+        if (this.shopInfoRepo.existsByGstin(shopInfo.getGstin())){
+            response.setStatus(400);
+            return "3";
+        }
+        else {
 
             ShopAuthCred shopAuthCred = shopInfo.getShopAuthCred();
             shopAuthCred.setShopInfo(shopInfo);
@@ -53,16 +58,20 @@ public class ShopService implements UserDetailsService {
 
     public String deleteShop(HttpServletResponse response) {
         Authentication shopToken = SecurityContextHolder.getContext().getAuthentication();
-        ShopInfo shopInfo = this.shopInfoRepo.findByEmail((String) shopToken.getName());
-        if (this.shopInfoRepo.existsById(shopInfo.getShopid())) {
-            this.shopInfoRepo.delete(shopInfo);
+        if (!(shopToken instanceof AnonymousAuthenticationToken)){
+            ShopInfo shopInfo = this.shopInfoRepo.findByEmail((String) shopToken.getName());
+            if (this.shopInfoRepo.existsById(shopInfo.getShopId())) {
+                this.shopInfoRepo.delete(shopInfo);
 
-            return "Shop has been deleted";
-        } else {
-            response.setStatus(400);
-            return "Shop with this id not present";
+                return "Shop has been deleted";
+            } else {
+                response.setStatus(400);
+                return "Shop with this id not present";
+            }
         }
 
+        response.setStatus(401);
+        return "Unauthorized request";
     }
 
     public String updateShop(HttpServletResponse response, HashMap<String, Object> updateDetails) {
@@ -88,6 +97,7 @@ public class ShopService implements UserDetailsService {
     }
 
     public List<ShopInfo> getAllShops() {
+
         List<ShopInfo> shopInfoList = this.shopInfoRepo.findAll();
 
         return shopInfoList;

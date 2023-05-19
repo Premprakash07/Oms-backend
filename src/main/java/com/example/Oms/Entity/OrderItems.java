@@ -28,9 +28,12 @@ public class OrderItems {
     @Temporal(TemporalType.DATE)
     private LocalDate deliveryDate;
 
+    private String status = "PLACED";
+
     @ManyToOne
-    @JsonIgnore
     private Inventory inventory;
+
+    private int cartQuantity;
 
     @ManyToOne
     @JsonIgnore

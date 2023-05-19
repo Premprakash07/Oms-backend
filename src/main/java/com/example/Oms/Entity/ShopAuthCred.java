@@ -29,7 +29,7 @@ public class ShopAuthCred implements UserDetails {
 
     private String password;
 
-    private String role = "SHOPKEEPER";
+    private String role = "shopkeeper";
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

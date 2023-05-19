@@ -1,5 +1,6 @@
 package com.example.Oms.Services;
 
+import com.example.Oms.Entity.OrderItems;
 import com.example.Oms.Entity.Orders;
 import com.example.Oms.Entity.UserInfo;
 import com.example.Oms.Repositories.InventoryRepo;
@@ -11,8 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
-public class OrderService {
+public class CustomerOrderService {
 
     @Autowired
     private OrderRepo orderRepo;
@@ -32,6 +36,10 @@ public class OrderService {
             UserInfo userInfo = this.userInfoRepo.findByEmail((String) userToken.getName());
 
             orders.setUserInfo(userInfo);
+            List<OrderItems> orderItems = orders.getOrderItemsList();
+            for (OrderItems item: orderItems) {
+                item.setOrders(orders);
+            }
 
             this.orderRepo.save(orders);
 
@@ -45,6 +53,22 @@ public class OrderService {
     }
 
     public String cancelOrder(HttpServletResponse response, int orderId) {
+        return "cancle orders";
+    }
 
+    public Object getAllOrders (HttpServletResponse response) {
+        Authentication userToken = SecurityContextHolder.getContext().getAuthentication();
+
+        if (this.userInfoRepo.existsByEmail((String) userToken.getName())) {
+            UserInfo userInfo = this.userInfoRepo.findByEmail((String) userToken.getName());
+
+            List<Orders> orders = this.orderRepo.findByUserInfo(userInfo);
+
+            return orders;
+        } else {
+            response.setStatus(400);
+
+            return "User with this is does not exist";
+        }
     }
 }

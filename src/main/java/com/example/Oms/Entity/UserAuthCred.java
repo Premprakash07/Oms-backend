@@ -29,7 +29,7 @@ public class UserAuthCred implements UserDetails {
     @JsonIgnore
     private UserInfo userInfo;
 
-    private String role = "CUSTOMER";
+    private String role = "customer";
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
