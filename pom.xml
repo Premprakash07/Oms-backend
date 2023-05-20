@@ -83,6 +83,15 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-spring-apps-maven-plugin</artifactId>
+				<version>1.15.0</version>
+				<configuration>
+					<subscriptionId>1515f1f9-ad9a-4c0d-aa43-09f000b885cf</subscriptionId>
+					<appName>oms-server</appName>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
