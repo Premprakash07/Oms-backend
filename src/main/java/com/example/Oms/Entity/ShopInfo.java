@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Random;
 
 @Entity
 @NoArgsConstructor
@@ -53,9 +54,11 @@ public class ShopInfo {
 
     private String phoneNo;
 
-    private String category;
+    private String category = "other";
 
     private String photoUrl;
+
+    private int rating = ran.random.nextInt(3, 5);
 
     @OneToMany(mappedBy = "shopInfo", cascade = CascadeType.ALL)
     private List<ShopReviews> shopReviewsList;
@@ -66,4 +69,8 @@ public class ShopInfo {
     @OneToMany(mappedBy = "shopInfo", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Inventory> inventoryList;
+}
+
+class ran{
+    public static Random random = new Random();
 }
