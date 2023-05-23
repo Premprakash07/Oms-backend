@@ -38,7 +38,7 @@ public class ShopPublic {
     public Object getAllShops(HttpServletResponse response, @PathVariable("shopId") int shopId) {
         Object res = this.shopService.getShopDetails(response, shopId);
 
-        return "azure worked";
+        return res;
     }
 
 
