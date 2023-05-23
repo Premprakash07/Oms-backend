@@ -101,6 +101,7 @@ public class ShopService implements UserDetailsService {
         if (this.shopInfoRepo.existsById(shopId)) {
             ShopInfo shopInfo = this.shopInfoRepo.findById(shopId).get();
 
+
             return shopInfo;
         } else {
             response.setStatus(400);
