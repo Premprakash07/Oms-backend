@@ -61,6 +61,7 @@ public class ShopInfo {
     private int rating = ran.random.nextInt(3, 5);
 
     @OneToMany(mappedBy = "shopInfo", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ShopReviews> shopReviewsList;
 
     @OneToOne(mappedBy = "shopInfo", cascade = CascadeType.ALL)

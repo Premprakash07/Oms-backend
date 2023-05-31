@@ -28,12 +28,12 @@ public class CustomerOrderService {
     private UserInfoRepo userInfoRepo;
 
 
-    public String placeOrders(HttpServletResponse response, Orders orders, int userId) {
-//        Authentication userToken = SecurityContextHolder.getContext().getAuthentication();
+    public String placeOrders(HttpServletResponse response, Orders orders) {
+        Authentication userToken = SecurityContextHolder.getContext().getAuthentication();
 
-        if (this.userInfoRepo.existsById(userId)){
+        if (this.userInfoRepo.existsByEmail((String) userToken.getPrincipal())){
 
-            UserInfo userInfo = this.userInfoRepo.findById(userId).get();
+            UserInfo userInfo = this.userInfoRepo.findByEmail((String) userToken.getPrincipal());
 
             orders.setUserInfo(userInfo);
             List<OrderItems> orderItems = orders.getOrderItemsList();
@@ -56,10 +56,11 @@ public class CustomerOrderService {
         return "cancle orders";
     }
 
-    public Object getAllOrders (HttpServletResponse response, int userId) {
+    public Object getAllOrders (HttpServletResponse response) {
+        Authentication userToken = SecurityContextHolder.getContext().getAuthentication();
 
-        if (this.userInfoRepo.existsById(userId)) {
-            UserInfo userInfo = this.userInfoRepo.findById(userId).get();
+        if (this.userInfoRepo.existsByEmail((String) userToken.getPrincipal())) {
+            UserInfo userInfo = this.userInfoRepo.findByEmail((String) userToken.getPrincipal());
 
             List<Orders> orders = this.orderRepo.findByUserInfo(userInfo);
 

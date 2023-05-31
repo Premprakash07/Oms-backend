@@ -15,9 +15,9 @@ public class CustomerOrders {
     @Autowired
     private CustomerOrderService customerOrderService;
 
-    @PostMapping("/place/{userId}")
-    public String placeOrder (HttpServletResponse response, @RequestBody Orders orders, @PathVariable("userId") int userId) {
-        String res = this.customerOrderService.placeOrders(response, orders, userId);
+    @PostMapping("/place")
+    public String placeOrder (HttpServletResponse response, @RequestBody Orders orders) {
+        String res = this.customerOrderService.placeOrders(response, orders);
 
         return res;
     }
@@ -29,9 +29,9 @@ public class CustomerOrders {
         return res;
     }
 
-    @GetMapping("/all/{userId}")
-    public Object getAllOrders(HttpServletResponse response, @PathVariable("userId") int userId) {
-        Object orders = this.customerOrderService.getAllOrders(response, userId);
+    @GetMapping("/all")
+    public Object getAllOrders(HttpServletResponse response) {
+        Object orders = this.customerOrderService.getAllOrders(response);
 
         return orders;
     }
