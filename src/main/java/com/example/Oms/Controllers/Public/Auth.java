@@ -27,11 +27,10 @@ public class Auth {
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Cookie authCookie = new Cookie("loginToken", null);
+        Cookie authCookie = request.getCookies()[0];
 
+        authCookie.setValue(null);
         authCookie.setMaxAge(0);
-        authCookie.setPath("/");
-        authCookie.setHttpOnly(false);
 
         response.addCookie(authCookie);
 

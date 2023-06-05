@@ -24,10 +24,10 @@ public class Config {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/public/**")
+                .requestMatchers("/**")
                 .permitAll()
-                .requestMatchers("/shop/**", "/inventory/**").hasAuthority("shopkeeper")
-                .requestMatchers("/customer/**", "/review/**").hasAuthority("customer")
+//                .requestMatchers("/shop/**", "/inventory/**").hasAuthority("shopkeeper")
+//                .requestMatchers("/customer/**", "/review/**").hasAuthority("customer")
                 .anyRequest()
                 .authenticated()
                 .and()
