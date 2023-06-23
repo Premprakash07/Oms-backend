@@ -68,6 +68,29 @@ public class ShopService implements UserDetailsService {
         }
     }
 
+    public String updateShop(HttpServletResponse response, ShopInfo shopInfo) {
+        if (this.shopInfoRepo.existsByEmail(shopInfo.getEmail())) {
+            response.setStatus(400);
+            return "1";
+        }
+        if (this.shopInfoRepo.existsByPhoneNo(shopInfo.getPhoneNo())) {
+            response.setStatus(400);
+            return "2";
+        }
+        if (this.shopInfoRepo.existsByGstin(shopInfo.getGstin())){
+            response.setStatus(400);
+            return "3";
+        }
+        else {
+
+            shopInfo.setPhotoUrl(photoUrl.get(shopInfo.getCategory()));
+
+            this.shopInfoRepo.save(shopInfo);
+
+            return "Shop details saved";
+        }
+    }
+
     public String deleteShop(HttpServletResponse response) {
         Authentication shopToken = SecurityContextHolder.getContext().getAuthentication();
         if (!(shopToken instanceof AnonymousAuthenticationToken)){
@@ -84,17 +107,6 @@ public class ShopService implements UserDetailsService {
 
         response.setStatus(401);
         return "Unauthorized request";
-    }
-
-    public String updateShop(HttpServletResponse response, HashMap<String, Object> updateDetails) {
-        if (this.shopInfoRepo.existsById((Integer) updateDetails.get("shopId"))) {
-
-            return "Shop updated";
-        } else {
-            response.setStatus(400);
-
-            return "Shop with this id is not present";
-        }
     }
 
     public Object getShopDetails(HttpServletResponse response, int shopId) {
@@ -123,5 +135,9 @@ public class ShopService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("Shop with this Username is not present");
         }
+    }
+
+    public String updatePwd(HttpServletResponse res, HashMap<String, String> pwdDetails) {
+        return "Password updated";
     }
 }

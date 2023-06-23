@@ -41,11 +41,15 @@ public class InventoryService {
 
     public String updateItem(HttpServletResponse response, HashMap<String, Object> itemUpdateDetails) {
         if (this.inventoryRepo.existsById((Integer) itemUpdateDetails.get("itemId"))) {
-            Inventory itemDetails = this.inventoryRepo.findById((Integer) itemUpdateDetails.get("itemId")).get();
+            Inventory inventory = this.inventoryRepo.findById((Integer) itemUpdateDetails.get("itemId")).get();
 
-//            itemDetails.setQuantityLeft(itemDetails.getQuantityLeft() + quantity);
+            inventory.setItemDescription((String) itemUpdateDetails.get("itemDescription"));
+            inventory.setItemImg((String) itemUpdateDetails.get("itemImg"));
+            inventory.setItemPrice(Float.parseFloat((String) itemUpdateDetails.get("itemPrice")));
+            inventory.setItemName((String) itemUpdateDetails.get("itemName"));
+            inventory.setQuantityLeft((Integer) itemUpdateDetails.get("quantityLeft"));
 
-            this.inventoryRepo.save(itemDetails);
+            this.inventoryRepo.save(inventory);
 
             return "Item has been added";
         } else {
@@ -55,10 +59,9 @@ public class InventoryService {
         }
     }
 
-    public String addNewItem(HttpServletResponse response, Inventory itemDetails){
-        Authentication shopToken = SecurityContextHolder.getContext().getAuthentication();
-        if (!(shopToken instanceof AnonymousAuthenticationToken)) {
-            ShopInfo shopInfo = this.shopInfoRepo.findByEmail((String) shopToken.getName());
+    public String addNewItem(HttpServletResponse response, Inventory itemDetails, int shopId) {
+        if (this.shopInfoRepo.existsById(shopId)) {
+            ShopInfo shopInfo = this.shopInfoRepo.findById(shopId).get();
             if (this.inventoryRepo.existsByItemNameAndShopInfo(itemDetails.getItemName(), shopInfo)) {
                 response.setStatus(400);
 
@@ -76,24 +79,18 @@ public class InventoryService {
         return "Unauthorized Access";
     }
 
-//    public String removeItem(HttpServletResponse response, int itemId) {
-//        Authentication shopToken = SecurityContextHolder.getContext().getAuthentication();
-//        if (!(shopToken instanceof AnonymousAuthenticationToken)) {
-//            ShopInfo shopInfo = this.shopInfoRepo.findByEmail((String) shopToken.getName());
-//            if (this.inventoryRepo.existsByIdAndShopInfo(itemId, shopInfo)) {
-//                this.inventoryRepo.deleteById(itemId);
-//
-//                return "Item has been deleted";
-//            } else {
-//                response.setStatus(400);
-//
-//                return "Item with id does not exist";
-//            }
-//        }
-//
-//        response.setStatus(401);
-//        return "Unauthorized Access";
-//    }
+    public String removeItem(HttpServletResponse response, int itemId) {
+        if (this.inventoryRepo.existsById(itemId)) {
+            this.inventoryRepo.deleteById(itemId);
+
+            return "Item has been deleted";
+        } else {
+            response.setStatus(400);
+
+            return "Item with id does not exist";
+        }
+    }
+
 
     public Object getAllItemFromShop(HttpServletResponse response, int shopId) {
         if (this.shopInfoRepo.existsById(shopId)) {

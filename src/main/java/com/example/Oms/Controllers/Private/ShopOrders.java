@@ -15,13 +15,17 @@ public class ShopOrders {
     @Autowired
     private ShopOrderService shopOrderService;
 
-//    @GetMapping("/all")
-//    public List<Orders> getAllOrders(HttpServletResponse response) {
-//        List<Orders> orders = this.shopOrderService.
-//    }
+    @GetMapping("/all/{shopId}")
+    public Object getAllOrders(HttpServletResponse res, @PathVariable("shopId") int shopId) {
+        Object orders = this.shopOrderService.getAllOrders(res, shopId);
+
+        return orders;
+    }
 //
-//    @PutMapping("/updatestatus/{orderId}")
-//    public String updateStatus(HttpServletResponse response, @PathVariable("orderId") int orderId) {
-//
-//    }
+    @PutMapping("/updatestatus/{orderId}")
+    public String updateStatus(HttpServletResponse res, @PathVariable("orderId") int orderId, @RequestBody String status) {
+        String response = this.shopOrderService.updateOrder(res, orderId, status);
+
+        return response;
+    }
 }

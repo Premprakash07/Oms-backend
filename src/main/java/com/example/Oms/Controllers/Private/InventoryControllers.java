@@ -16,17 +16,24 @@ public class InventoryControllers {
     @Autowired
     private InventoryService inventoryService;
 
-    @PostMapping("/addnewitem")
-    public String addNewItem(HttpServletResponse response, @RequestBody Inventory inventory) {
-        String res = this.inventoryService.addNewItem(response, inventory);
+    @PostMapping("/addnewitem/{shopId}")
+    public String addNewItem(HttpServletResponse response, @RequestBody Inventory inventory, @PathVariable("shopId") int shopId) {
+        String res = this.inventoryService.addNewItem(response, inventory, shopId);
 
         return res;
     }
 
     @PostMapping("/updateitem")
-    public String updateItem (HttpServletResponse response, @RequestBody HashMap<String , Object> updateDetails) {
+    public String updateItem (HttpServletResponse response, @RequestBody HashMap<String, Object> updateDetails) {
         String res = this.inventoryService.updateItem(response, updateDetails);
 
         return res;
+    }
+
+    @DeleteMapping("/deleteitem/{itemId}")
+    public String deleteItem (HttpServletResponse res, @PathVariable("itemId") int itemId) {
+        String response = this.inventoryService.removeItem(res, itemId);
+
+        return  response;
     }
 }
