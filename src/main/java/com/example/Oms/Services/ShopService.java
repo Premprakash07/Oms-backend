@@ -116,10 +116,10 @@ public class ShopService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public ShopAuthCred loadUserByUsername(String username) throws UsernameNotFoundException {
         if (this.shopInfoRepo.existsByEmail(username)) {
             ShopInfo shopInfo = this.shopInfoRepo.findByEmail(username);
-            return (UserDetails) this.shopCredRepo.findByShopInfo(shopInfo);
+            return this.shopCredRepo.findByShopInfo(shopInfo);
         } else {
             throw new UsernameNotFoundException("Shop with this Username is not present");
         }

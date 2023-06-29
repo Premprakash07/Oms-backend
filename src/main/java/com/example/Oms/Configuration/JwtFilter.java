@@ -1,22 +1,19 @@
 package com.example.Oms.Configuration;
 
 import com.auth0.jwt.interfaces.Claim;
-import com.example.Oms.Entity.ShopInfo;
-import com.example.Oms.Entity.UserInfo;
+import com.example.Oms.Entity.ShopAuthCred;
+import com.example.Oms.Entity.UserAuthCred;
 import com.example.Oms.Repositories.ShopInfoRepo;
 import com.example.Oms.Repositories.UserInfoRepo;
 import com.example.Oms.Services.ShopService;
+import com.example.Oms.Services.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,10 +24,15 @@ public class JwtFilter implements Filter {
 
     @Autowired
     private JwtUtils jwtUtils;
+
     @Autowired
     private UserInfoRepo userInfoRepo;
+
     @Autowired
     private ShopInfoRepo shopInfoRepo;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ShopService shopService;
@@ -55,32 +57,21 @@ public class JwtFilter implements Filter {
 
                     if (claims.get("Type").asString().equals("customer")) {
 
-                        UserInfo userProfile = new UserInfo();
-
                         String email = claims.get("Email").asString();
 
-                        if (this.userInfoRepo.existsByEmail(email)){
-                            userProfile = this.userInfoRepo.findByEmail(email);
-                        } else {
-                            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid token");
-                        }
+                        UserAuthCred userInfo = this.userService.loadUserByUsername(email);
 
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, userProfile.getUserAuthCred().getPassword(), userProfile.getUserAuthCred().getAuthorities());
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, userInfo.getPassword(), userInfo.getAuthorities());
 
                         SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     } else {
-                        ShopInfo shopInfo = new ShopInfo();
 
                         String email = claims.get("Email").asString();
 
-                        if (this.shopInfoRepo.existsByEmail(email)) {
-                            shopInfo = this.shopInfoRepo.findByEmail(email);
-                        } else {
-                            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid token");
-                        }
+                        ShopAuthCred shopInfo = this.shopService.loadUserByUsername(email);
 
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, shopInfo.getShopAuthCred().getPassword(), shopInfo.getShopAuthCred().getAuthorities());
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, shopInfo.getPassword(), shopInfo.getAuthorities());
 
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }

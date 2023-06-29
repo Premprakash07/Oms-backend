@@ -78,10 +78,10 @@ public class UserService implements UserDetailsService {
      }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserAuthCred loadUserByUsername(String username) throws UsernameNotFoundException {
         if (this.userInfoRepo.existsByEmail(username)) {
             UserInfo userInfo = this.userInfoRepo.findByEmail(username);
-            return (UserDetails) this.userCredRepo.findByUserInfo(userInfo);
+            return  this.userCredRepo.findByUserInfo(userInfo);
         } else {
             throw new UsernameNotFoundException("User with this Username does not exist");
         }

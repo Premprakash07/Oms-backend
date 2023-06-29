@@ -23,7 +23,7 @@ public class Inventory {
 
     private String itemImg = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F556%2F319%2Foriginal%2Fflat-burger-splash-summer-food-vector-illustration.jpg&f=1&nofb=1&ipt=ed9e496ffd78566aa7fe6b2ba59170e0d4abe0059fab497a13037af0a1e78be5&ipo=images";
 
-    private float itemPrice;
+    private Float itemPrice;
 
     private int quantityLeft;
 
